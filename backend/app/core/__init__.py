@@ -1,0 +1,1 @@
+# Configurações principais da aplicação
