@@ -24,7 +24,7 @@ Sistema completo de gestão para clínica médica com funcionalidades de cadastr
 ### WhatsApp Service
 - **Node.js** - Runtime JavaScript
 - **whatsapp-web.js** - Integração com WhatsApp
-- **OpenAI** - IA para mensagens contextualizadas
+- **OpenAI GPT** - IA para mensagens contextualizadas (OPCIONAL - usa templates por padrão)
 
 ## 📋 Funcionalidades
 
@@ -34,7 +34,7 @@ Sistema completo de gestão para clínica médica com funcionalidades de cadastr
 - ✅ **Sistema de Agendamento** - Calendário de consultas, horários disponíveis, agenda médica
 - ✅ **Prontuário Eletrônico** - CRUD completo, visualização e templates
 - ✅ **Módulo Financeiro** - Controle de pagamentos, relatórios e gráficos
-- ✅ **WhatsApp Bot** - Lembretes automáticos via WhatsApp com IA (OpenAI GPT)
+- ✅ **WhatsApp Bot** - Lembretes automáticos via WhatsApp (templates profissionais + OpenAI GPT opcional)
 - ✅ **API Completa** - Documentação interativa com Swagger/ReDoc
 - ✅ **Relatórios e Métricas** - Estatísticas gerenciais completas
 
@@ -175,6 +175,15 @@ python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 cd frontend
 npm run dev
 ```
+
+### Configuração OpenAI (Opcional)
+
+Para habilitar mensagens personalizadas com IA, veja o guia completo: [`OPENAI_SETUP.md`](OPENAI_SETUP.md)
+
+**Resumo rápido:**
+- Por padrão, o sistema usa **mensagens template profissionais** (sem custo)
+- OpenAI GPT é **opcional** e requer chave da API (~$0.002 por mensagem)
+- Sistema tem **fallback automático** se OpenAI falhar
 
 ### Banco de Dados
 ```bash
