@@ -1,85 +1,73 @@
-# Frontend - Clínica Médica
+# Welcome to your Lovable project
 
-Frontend da aplicação de gestão de clínica médica desenvolvido com React, TypeScript e Tailwind CSS.
+## Project info
 
-## Tecnologias
+**URL**: https://lovable.dev/projects/cc2d3195-4194-475b-9089-d3792877bff4
 
-- **React 18** - Biblioteca para interface de usuário
-- **TypeScript** - Tipagem estática
-- **Vite** - Build tool e dev server
-- **Tailwind CSS** - Framework CSS utilitário
-- **React Router** - Roteamento
-- **TanStack Query** - Gerenciamento de estado do servidor
-- **React Hook Form** - Formulários
-- **Zod** - Validação de dados
-- **Lucide React** - Ícones
+## How can I edit this code?
 
-## Scripts Disponíveis
+There are several ways of editing your application.
 
-```bash
-# Instalar dependências
-npm install
+**Use Lovable**
 
-# Executar em modo de desenvolvimento
+Simply visit the [Lovable Project](https://lovable.dev/projects/cc2d3195-4194-475b-9089-d3792877bff4) and start prompting.
+
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
-
-# Build para produção
-npm run build
-
-# Preview do build
-npm run preview
-
-# Linting
-npm run lint
 ```
 
-## Estrutura do Projeto
+**Edit a file directly in GitHub**
 
-```
-src/
-├── components/          # Componentes reutilizáveis
-├── pages/              # Páginas da aplicação
-├── services/           # Serviços da API
-├── hooks/              # Custom hooks
-├── types/              # Definições de tipos TypeScript
-├── utils/              # Funções utilitárias
-├── contexts/           # Contextos React
-└── config/             # Configurações
-```
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-## Configuração
+**Use GitHub Codespaces**
 
-1. Instale as dependências:
-   ```bash
-   npm install
-   ```
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-2. Configure a URL da API no arquivo `src/config/env.ts`:
-   ```typescript
-   export const config = {
-     apiUrl: 'http://localhost:8000',
-   }
-   ```
+## What technologies are used for this project?
 
-3. Execute o servidor de desenvolvimento:
-   ```bash
-   npm run dev
-   ```
+This project is built with:
 
-A aplicação estará disponível em `http://localhost:3000`.
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-## Funcionalidades
+## How can I deploy this project?
 
-- ✅ Autenticação e autorização
-- ✅ Dashboard com estatísticas
-- ✅ Gerenciamento de pacientes
-- 🔄 Sistema de agendamento (em desenvolvimento)
-- 🔄 Prontuários eletrônicos (em desenvolvimento)
-- 🔄 Módulo financeiro (em desenvolvimento)
-- 🔄 Configurações do sistema (em desenvolvimento)
+Simply open [Lovable](https://lovable.dev/projects/cc2d3195-4194-475b-9089-d3792877bff4) and click on Share -> Publish.
 
-## Credenciais de Teste
+## Can I connect a custom domain to my Lovable project?
 
-- **Admin**: admin@clinica.com / admin123
-- **Médico**: dr.silva@clinica.com / medico123
-- **Recepcionista**: recepcionista@clinica.com / recepcionista123
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

@@ -2,67 +2,174 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 222.2 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47% 11%;
+
+    /* Medical Green Theme */
+    --primary: 142 71% 45%;        /* #10B981 - Medical Green */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 142 76% 95%;  /* Light green background */
+    --primary-dark: 142 76% 36%;   /* Dark green for hover */
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 217 91% 60%;         /* Blue accent */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;         /* Orange/Yellow */
+    --warning-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;        /* Same as primary */
+    --success-foreground: 0 0% 100%;
+
+    --info: 217 91% 60%;           /* Blue */
+    --info-foreground: 0 0% 100%;
+
+    --whatsapp: 142 70% 49%;       /* WhatsApp green */
+    --whatsapp-foreground: 0 0% 100%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 71% 45%;
+
+    --radius: 0.5rem;
+
+    /* Sidebar - Clean white theme */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222.2 47% 11%;
+    --sidebar-primary: 142 71% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 142 76% 95%;
+    --sidebar-accent-foreground: 142 71% 45%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 142 71% 45%;
+
+    /* Chart colors */
+    --chart-1: 142 71% 45%;
+    --chart-2: 217 91% 60%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 280 80% 60%;
+    --chart-5: 340 82% 52%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 142 71% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 142 76% 20%;
+    --primary-dark: 142 76% 55%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142 71% 45%;
+
+    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 142 71% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 142 71% 45%;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
   }
-  
+
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
 @layer components {
-  .btn {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  /* Card shadows */
+  .card-shadow {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   }
-  
-  .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+
+  .card-shadow-lg {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   }
-  
-  .btn-secondary {
-    @apply bg-secondary-100 text-secondary-900 hover:bg-secondary-200 focus:ring-secondary-500;
+
+  /* Status badges */
+  .badge-agendada {
+    @apply bg-blue-100 text-blue-700 border-blue-200;
   }
-  
-  .btn-success {
-    @apply bg-success-600 text-white hover:bg-success-700 focus:ring-success-500;
+
+  .badge-confirmada {
+    @apply bg-green-100 text-green-700 border-green-200;
   }
-  
-  .btn-warning {
-    @apply bg-warning-600 text-white hover:bg-warning-700 focus:ring-warning-500;
+
+  .badge-realizada {
+    @apply bg-gray-100 text-gray-700 border-gray-200;
   }
-  
-  .btn-error {
-    @apply bg-error-600 text-white hover:bg-error-700 focus:ring-error-500;
+
+  .badge-cancelada {
+    @apply bg-red-100 text-red-700 border-red-200;
   }
-  
-  .input {
-    @apply flex h-10 w-full rounded-md border border-secondary-300 bg-white px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-secondary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+
+  .badge-faltou {
+    @apply bg-orange-100 text-orange-700 border-orange-200;
   }
-  
-  .card {
-    @apply rounded-lg border border-secondary-200 bg-white text-secondary-950 shadow-sm;
+
+  /* Payment status */
+  .badge-pago {
+    @apply bg-green-100 text-green-700 border-green-200;
   }
-  
-  .card-header {
-    @apply flex flex-col space-y-1.5 p-6;
+
+  .badge-pendente {
+    @apply bg-yellow-100 text-yellow-700 border-yellow-200;
   }
-  
-  .card-title {
-    @apply text-2xl font-semibold leading-none tracking-tight;
-  }
-  
-  .card-description {
-    @apply text-sm text-secondary-500;
-  }
-  
-  .card-content {
-    @apply p-6 pt-0;
-  }
-  
-  .card-footer {
-    @apply flex items-center p-6 pt-0;
+
+  .badge-atrasado {
+    @apply bg-red-100 text-red-700 border-red-200;
   }
 }

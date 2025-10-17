@@ -1,120 +1,161 @@
-import { useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import { Stethoscope, Eye, EyeOff } from 'lucide-react'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Activity, Mail, Lock } from 'lucide-react';
 
-export function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  
-  const { login } = useAuth()
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      await login(email, password)
-    } catch (err) {
-      setError('Email ou senha incorretos')
+      await login(email, password);
+      navigate('/');
+    } catch (error) {
+      // Error is handled in AuthContext
     } finally {
-      setIsLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
+  const credenciais = [
+    { perfil: 'Admin', email: 'admin@clinica.com', senha: 'admin123' },
+    { perfil: 'Médico', email: 'dr.silva@clinica.com', senha: 'medico123' },
+    { perfil: 'Recepcionista', email: 'recep@clinica.com', senha: 'recepcionista123' },
+  ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-secondary-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <div className="flex justify-center">
-            <div className="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center">
-              <Stethoscope className="w-8 h-8 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-4">
+      <div className="w-full max-w-6xl grid md:grid-cols-2 gap-8 items-center">
+        {/* Left Side - Branding */}
+        <div className="hidden md:block space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center shadow-lg">
+              <Activity className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Clínica Médica</h1>
+              <p className="text-muted-foreground">Sistema de Gestão Completo</p>
             </div>
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-secondary-900">
-            Clínica Médica
-          </h2>
-          <p className="mt-2 text-center text-sm text-secondary-600">
-            Faça login para acessar o sistema
-          </p>
+
+          <div className="space-y-4 p-6 bg-card rounded-lg border border-border">
+            <h2 className="text-lg font-semibold text-foreground">Funcionalidades</h2>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
+                Gestão completa de pacientes
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
+                Agendamento de consultas
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
+                Prontuários eletrônicos
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
+                Controle financeiro
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
+                Lembretes via WhatsApp
+              </li>
+            </ul>
+          </div>
         </div>
-        
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-secondary-700">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 input"
-                placeholder="seu@email.com"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-secondary-700">
-                Senha
-              </label>
-              <div className="mt-1 relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="input pr-10"
-                  placeholder="Sua senha"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-secondary-400" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-secondary-400" />
-                  )}
-                </button>
+
+        {/* Right Side - Login Form */}
+        <div className="space-y-6">
+          <Card className="shadow-xl">
+            <CardHeader>
+              <CardTitle>Acesse sua conta</CardTitle>
+              <CardDescription>
+                Entre com suas credenciais para acessar o sistema
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password">Senha</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? 'Entrando...' : 'Entrar'}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Credenciais de Teste */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Credenciais de Teste</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {credenciais.map((cred) => (
+                  <button
+                    key={cred.email}
+                    onClick={() => {
+                      setEmail(cred.email);
+                      setPassword(cred.senha);
+                    }}
+                    className="w-full text-left p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="font-medium text-sm">{cred.perfil}</p>
+                        <p className="text-xs text-muted-foreground">{cred.email}</p>
+                      </div>
+                      <p className="text-xs text-muted-foreground font-mono">{cred.senha}</p>
+                    </div>
+                  </button>
+                ))}
               </div>
-            </div>
-          </div>
-
-          {error && (
-            <div className="bg-error-50 border border-error-200 text-error-700 px-4 py-3 rounded-md">
-              {error}
-            </div>
-          )}
-
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="btn btn-primary w-full py-3"
-            >
-              {isLoading ? 'Entrando...' : 'Entrar'}
-            </button>
-          </div>
-          
-          <div className="text-center text-sm text-secondary-600">
-            <p>Credenciais de teste:</p>
-            <p><strong>Admin:</strong> admin@clinica.com / admin123</p>
-            <p><strong>Médico:</strong> dr.silva@clinica.com / medico123</p>
-          </div>
-        </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
-  )
+  );
 }

@@ -73,3 +73,12 @@ start_react.ps1
 
 # Script de conveniência (manter no git)
 # start_api.ps1
+
+# Frontend antigo (backup)
+frontend-react-old/
+
+# WhatsApp sessions
+whatsapp-service/sessions/
+
+# Bun lockfile
+bun.lockb

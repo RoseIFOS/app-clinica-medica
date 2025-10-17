@@ -1,162 +1,223 @@
-import { Users, Calendar, FileText, DollarSign, TrendingUp, Clock } from 'lucide-react'
+import { MainLayout } from '@/components/layout/MainLayout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Users, Calendar, DollarSign, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
+// Mock data - será substituído por dados reais da API
 const stats = [
   {
-    name: 'Total de Pacientes',
-    value: '5',
+    title: 'Total de Pacientes',
+    value: '150',
     icon: Users,
-    color: 'text-primary-600',
-    bgColor: 'bg-primary-100',
+    trend: '+12%',
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-100'
   },
   {
-    name: 'Consultas Hoje',
-    value: '2',
+    title: 'Consultas Hoje',
+    value: '12',
     icon: Calendar,
-    color: 'text-success-600',
-    bgColor: 'bg-success-100',
+    trend: '+3',
+    color: 'text-green-600',
+    bgColor: 'bg-green-100'
   },
   {
-    name: 'Prontuários Pendentes',
-    value: '1',
-    icon: FileText,
-    color: 'text-warning-600',
-    bgColor: 'bg-warning-100',
-  },
-  {
-    name: 'Receita do Mês',
-    value: 'R$ 1.250,00',
+    title: 'Receita do Mês',
+    value: 'R$ 51.000',
     icon: DollarSign,
-    color: 'text-success-600',
-    bgColor: 'bg-success-100',
+    trend: '+8%',
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-100'
   },
-]
+  {
+    title: 'Taxa de Comparecimento',
+    value: '92.5%',
+    icon: TrendingUp,
+    trend: '+2.5%',
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-100'
+  },
+];
 
-const recentActivities = [
-  {
-    id: 1,
-    type: 'consulta',
-    description: 'Nova consulta agendada para Maria da Silva',
-    time: '2 horas atrás',
-    icon: Calendar,
-  },
-  {
-    id: 2,
-    type: 'paciente',
-    description: 'João Santos atualizou seus dados',
-    time: '4 horas atrás',
-    icon: Users,
-  },
-  {
-    id: 3,
-    type: 'pagamento',
-    description: 'Pagamento de R$ 150,00 confirmado',
-    time: '6 horas atrás',
-    icon: DollarSign,
-  },
-]
+const consultasData = [
+  { mes: 'Mai', consultas: 45 },
+  { mes: 'Jun', consultas: 52 },
+  { mes: 'Jul', consultas: 48 },
+  { mes: 'Ago', consultas: 61 },
+  { mes: 'Set', consultas: 55 },
+  { mes: 'Out', consultas: 67 },
+];
 
-export function Dashboard() {
+const receitaData = [
+  { mes: 'Mai', valor: 38 },
+  { mes: 'Jun', valor: 42 },
+  { mes: 'Jul', valor: 39 },
+  { mes: 'Ago', valor: 47 },
+  { mes: 'Set', valor: 44 },
+  { mes: 'Out', valor: 51 },
+];
+
+const tipoConsultaData = [
+  { name: 'Primeira Consulta', value: 45, color: '#10B981' },
+  { name: 'Retorno', value: 280, color: '#3B82F6' },
+  { name: 'Exame', value: 15, color: '#F59E0B' },
+];
+
+const proximasConsultas = [
+  { paciente: 'Maria da Silva', horario: '09:00', medico: 'Dr. João Silva', tipo: 'Retorno' },
+  { paciente: 'José Santos', horario: '10:00', medico: 'Dr. João Silva', tipo: 'Primeira Consulta' },
+  { paciente: 'Ana Oliveira', horario: '11:00', medico: 'Dra. Maria Costa', tipo: 'Exame' },
+  { paciente: 'Pedro Lima', horario: '14:00', medico: 'Dr. João Silva', tipo: 'Retorno' },
+];
+
+export default function Dashboard() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-secondary-900">Dashboard</h1>
-        <p className="text-secondary-600">Visão geral da clínica médica</p>
-      </div>
-
-      {/* Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => (
-          <div key={stat.name} className="card">
-            <div className="card-content">
-              <div className="flex items-center">
-                <div className={`p-3 rounded-lg ${stat.bgColor}`}>
-                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-secondary-600">{stat.name}</p>
-                  <p className="text-2xl font-bold text-secondary-900">{stat.value}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Próximas Consultas */}
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title">Próximas Consultas</h3>
-            <p className="card-description">Consultas agendadas para hoje</p>
-          </div>
-          <div className="card-content">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3 p-3 bg-secondary-50 rounded-lg">
-                <Clock className="w-5 h-5 text-primary-600" />
-                <div className="flex-1">
-                  <p className="font-medium text-secondary-900">Maria da Silva</p>
-                  <p className="text-sm text-secondary-600">09:00 - Dr. João Silva</p>
-                </div>
-                <span className="px-2 py-1 text-xs font-medium bg-success-100 text-success-800 rounded-full">
-                  Confirmada
-                </span>
-              </div>
-              
-              <div className="flex items-center space-x-3 p-3 bg-secondary-50 rounded-lg">
-                <Clock className="w-5 h-5 text-primary-600" />
-                <div className="flex-1">
-                  <p className="font-medium text-secondary-900">João Santos</p>
-                  <p className="text-sm text-secondary-600">15:00 - Dra. Maria Santos</p>
-                </div>
-                <span className="px-2 py-1 text-xs font-medium bg-warning-100 text-warning-800 rounded-full">
-                  Pendente
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Atividades Recentes */}
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title">Atividades Recentes</h3>
-            <p className="card-description">Últimas ações no sistema</p>
-          </div>
-          <div className="card-content">
-            <div className="space-y-4">
-              {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-center space-x-3">
-                  <div className="p-2 bg-secondary-100 rounded-lg">
-                    <activity.icon className="w-4 h-4 text-secondary-600" />
+    <MainLayout 
+      title="Dashboard" 
+      subtitle="Visão geral da clínica"
+    >
+      <div className="space-y-6">
+        {/* Stats Cards */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <Card key={stat.title} className="card-shadow hover:card-shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                      <p className="text-2xl font-bold mt-2">{stat.value}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        <span className="text-green-600 font-medium">{stat.trend}</span> vs mês anterior
+                      </p>
+                    </div>
+                    <div className={`w-12 h-12 rounded-lg ${stat.bgColor} flex items-center justify-center`}>
+                      <Icon className={`w-6 h-6 ${stat.color}`} />
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-secondary-900">
-                      {activity.description}
-                    </p>
-                    <p className="text-xs text-secondary-500">{activity.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
-      </div>
 
-      {/* Gráfico de Receita */}
-      <div className="card">
-        <div className="card-header">
-          <h3 className="card-title">Receita Mensal</h3>
-          <p className="card-description">Evolução da receita nos últimos 6 meses</p>
+        {/* Charts Row */}
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Consultas Chart */}
+          <Card className="card-shadow">
+            <CardHeader>
+              <CardTitle>Consultas (Últimos 6 Meses)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={consultasData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="mes" stroke="#888" />
+                  <YAxis stroke="#888" />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="consultas" stroke="#10B981" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Receita Chart */}
+          <Card className="card-shadow">
+            <CardHeader>
+              <CardTitle>Receita Mensal (R$ mil)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={receitaData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="mes" stroke="#888" />
+                  <YAxis stroke="#888" />
+                  <Tooltip />
+                  <Bar dataKey="valor" fill="#10B981" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
         </div>
-        <div className="card-content">
-          <div className="h-64 flex items-center justify-center bg-secondary-50 rounded-lg">
-            <div className="text-center">
-              <TrendingUp className="w-12 h-12 text-secondary-400 mx-auto mb-4" />
-              <p className="text-secondary-500">Gráfico de receita será implementado em breve</p>
-            </div>
-          </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* Tipo de Consulta Chart */}
+          <Card className="card-shadow">
+            <CardHeader>
+              <CardTitle>Consultas por Tipo</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={tipoConsultaData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {tipoConsultaData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="mt-4 space-y-2">
+                {tipoConsultaData.map((item) => (
+                  <div key={item.name} className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
+                      <span className="text-muted-foreground">{item.name}</span>
+                    </div>
+                    <span className="font-medium">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Próximas Consultas */}
+          <Card className="card-shadow md:col-span-2">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Próximas Consultas de Hoje</CardTitle>
+                <Clock className="w-5 h-5 text-muted-foreground" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {proximasConsultas.map((consulta, index) => (
+                  <div 
+                    key={index}
+                    className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="text-primary font-semibold">
+                          {consulta.paciente.split(' ')[0].charAt(0)}
+                          {consulta.paciente.split(' ')[1]?.charAt(0)}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-medium">{consulta.paciente}</p>
+                        <p className="text-sm text-muted-foreground">{consulta.medico}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-primary">{consulta.horario}</p>
+                      <p className="text-sm text-muted-foreground">{consulta.tipo}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </div>
-  )
+    </MainLayout>
+  );
 }
