@@ -19,6 +19,18 @@ app = FastAPI(
 # Middleware customizado para adicionar headers CORS em TODAS as respostas
 @app.middleware("http")
 async def add_cors_headers(request: Request, call_next):
+    # Se for OPTIONS, retornar imediatamente com headers CORS
+    if request.method == "OPTIONS":
+        return Response(
+            status_code=200,
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Max-Age": "3600",
+            }
+        )
+    
     response = await call_next(request)
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
@@ -55,8 +67,16 @@ async def health_check():
 
 # Adicionar handler OPTIONS global para CORS preflight
 @app.options("/{path:path}")
-async def options_handler(path: str):
-    return {"status": "ok"}
+async def options_handler(request: Request):
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Max-Age": "3600",
+        }
+    )
 
 
 # Incluir rotas da API
