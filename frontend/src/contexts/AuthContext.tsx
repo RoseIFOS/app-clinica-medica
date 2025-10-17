@@ -51,34 +51,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function login(email: string, password: string) {
-    // Tentar login com API primeiro
-    if (useApiAuth) {
-      try {
-        const formData = new URLSearchParams();
-        formData.append('username', email);
-        formData.append('password', password);
+    // SEMPRE tentar login com API primeiro
+    try {
+      console.log('🔐 Tentando login na API:', email);
+      
+      const formData = new URLSearchParams();
+      formData.append('username', email);
+      formData.append('password', password);
 
-        const response = await api.post('/auth/login', formData, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
+      const response = await api.post('/auth/login', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
 
-        const { access_token, user: userData } = response.data;
+      console.log('✅ Login API bem-sucedido:', response.data);
 
-        localStorage.setItem('token', access_token);
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
-        
-        toast.success('Login realizado com sucesso!');
-        return;
-      } catch (error: any) {
-        console.warn('API auth failed, falling back to mock auth');
-        setUseApiAuth(false);
+      const { access_token, user: userData } = response.data;
+
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      setUseApiAuth(true);
+      
+      toast.success('Login realizado com sucesso! (API Real)');
+      return;
+    } catch (error: any) {
+      console.error('❌ Erro no login da API:', error);
+      console.error('Detalhes:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data
+      });
+      
+      // Se for erro de credenciais (401), NÃO usar fallback
+      if (error.response?.status === 401 || error.response?.status === 422) {
+        toast.error('Credenciais inválidas');
+        throw new Error('Credenciais inválidas');
       }
+      
+      // Apenas usar mock se API estiver totalmente indisponível
+      console.warn('⚠️ API indisponível, usando autenticação mock');
+      setUseApiAuth(false);
     }
 
-    // Fallback para autenticação mock (quando API não disponível)
+    // Fallback para autenticação mock (APENAS quando API indisponível)
     await new Promise(resolve => setTimeout(resolve, 500));
     
     const mockUser = MOCK_USERS.find(u => u.email === email && u.password === password);
@@ -92,7 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(userWithoutPassword);
     localStorage.setItem('user', JSON.stringify(userWithoutPassword));
     localStorage.setItem('token', 'mock-token-' + Date.now());
-    toast.success('Login realizado com sucesso!');
+    toast.warning('Login modo desenvolvimento (Mock)');
   }
 
   function logout() {
