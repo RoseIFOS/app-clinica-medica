@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import api from '@/lib/api';
 
 // Mock data
 const pacientesMock = [
@@ -80,7 +81,7 @@ export default function Pacientes() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validação básica
@@ -89,22 +90,58 @@ export default function Pacientes() {
       return;
     }
 
-    // Aqui você faria a chamada para a API
-    console.log('Dados do novo paciente:', formData);
-    toast.success('Paciente cadastrado com sucesso!');
-    
-    // Resetar formulário e fechar dialog
-    setFormData({
-      nome: '',
-      cpf: '',
-      telefone: '',
-      email: '',
-      dataNascimento: '',
-      convenio: '',
-      endereco: '',
-      whatsapp: '',
-    });
-    setIsDialogOpen(false);
+    try {
+      // Tentar salvar via API
+      const response = await api.post('/pacientes', {
+        nome: formData.nome,
+        cpf: formData.cpf,
+        telefone: formData.telefone,
+        email: formData.email || null,
+        data_nascimento: formData.dataNascimento || null,
+        whatsapp: formData.whatsapp || null,
+        endereco: formData.endereco || null,
+        convenio: formData.convenio || 'Particular',
+      });
+
+      console.log('✅ Paciente salvo no banco:', response.data);
+      toast.success('Paciente cadastrado com sucesso no banco de dados!');
+      
+      // Resetar formulário e fechar dialog
+      setFormData({
+        nome: '',
+        cpf: '',
+        telefone: '',
+        email: '',
+        dataNascimento: '',
+        convenio: '',
+        endereco: '',
+        whatsapp: '',
+      });
+      setIsDialogOpen(false);
+      
+      // TODO: Recarregar lista de pacientes
+    } catch (error: any) {
+      console.error('❌ Erro ao salvar:', error);
+      
+      // Se API não disponível, apenas simular
+      if (error.message?.includes('Network Error') || error.code === 'ERR_NETWORK') {
+        console.log('⚠️ API não disponível, simulando cadastro...');
+        toast.success('Paciente cadastrado (modo simulação)');
+        setFormData({
+          nome: '',
+          cpf: '',
+          telefone: '',
+          email: '',
+          dataNascimento: '',
+          convenio: '',
+          endereco: '',
+          whatsapp: '',
+        });
+        setIsDialogOpen(false);
+      } else {
+        toast.error(error.response?.data?.detail || 'Erro ao cadastrar paciente');
+      }
+    }
   };
 
   return (
