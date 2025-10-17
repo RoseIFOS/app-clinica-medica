@@ -24,8 +24,16 @@ class Settings(BaseSettings):
     # Environment
     environment: str = "development"
     
-    # CORS
-    allowed_origins: list = ["*"]  # Permitir Lovable e outros frontends
+    # CORS - Permitir Lovable e outros frontends
+    @property
+    def allowed_origins(self) -> list:
+        return [
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "https://*.lovableproject.com",
+            "https://*.lovable.app",
+            "*"  # Permitir todos durante desenvolvimento
+        ]
     
     class Config:
         env_file = ".env"
