@@ -20,22 +20,22 @@ if (-not (Test-Path "frontend")) {
 # Entrar no diretório frontend
 Set-Location frontend
 
-Write-Host "📦 Adicionando mudanças..." -ForegroundColor Yellow
+Write-Host "Adicionando mudancas..." -ForegroundColor Yellow
 git add .
 
-Write-Host "💾 Fazendo commit local..." -ForegroundColor Yellow
+Write-Host "Fazendo commit local..." -ForegroundColor Yellow
 git commit -m "$Message" 2>$null
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "⚠️  Nenhuma mudança para commitar" -ForegroundColor Yellow
+    Write-Host "Nenhuma mudanca para commitar" -ForegroundColor Yellow
 } else {
-    Write-Host "✅ Commit criado: $Message" -ForegroundColor Green
+    Write-Host "Commit criado: $Message" -ForegroundColor Green
 }
 
-Write-Host "🚀 Enviando para Lovable (fronty-magic)..." -ForegroundColor Yellow
+Write-Host "Enviando para Lovable (fronty-magic)..." -ForegroundColor Yellow
 
 # Puxar últimas mudanças do Lovable primeiro
-Write-Host "⬇️  Puxando mudanças do Lovable..." -ForegroundColor Yellow
+Write-Host "Puxando mudancas do Lovable..." -ForegroundColor Yellow
 git pull lovable main --rebase 2>$null
 
 # Enviar para o Lovable
@@ -44,19 +44,19 @@ git push lovable HEAD:main -f
 if ($LASTEXITCODE -eq 0) {
     Write-Host ""
     Write-Host "========================================" -ForegroundColor Green
-    Write-Host "  ✅ Sincronização completa!" -ForegroundColor Green
+    Write-Host "  Sincronizacao completa!" -ForegroundColor Green
     Write-Host "========================================" -ForegroundColor Green
     Write-Host ""
-    Write-Host "🌐 Acesse o Lovable para ver as mudanças:" -ForegroundColor Cyan
+    Write-Host "Acesse o Lovable para ver as mudancas:" -ForegroundColor Cyan
     Write-Host "   https://lovable.dev" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "📂 Repositório GitHub:" -ForegroundColor Cyan
+    Write-Host "Repositorio GitHub:" -ForegroundColor Cyan
     Write-Host "   https://github.com/RoseIFOS/fronty-magic" -ForegroundColor Cyan
     Write-Host ""
 } else {
     Write-Host ""
-    Write-Host "❌ Erro ao enviar para o Lovable" -ForegroundColor Red
-    Write-Host "   Tente resolver conflitos manualmente" -ForegroundColor Yellow
+    Write-Host "Erro ao enviar para o Lovable" -ForegroundColor Red
+    Write-Host "Tente resolver conflitos manualmente" -ForegroundColor Yellow
 }
 
 # Voltar ao diretório raiz

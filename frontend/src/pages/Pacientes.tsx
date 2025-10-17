@@ -13,6 +13,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
 
 // Mock data
 const pacientesMock = [
@@ -47,12 +57,55 @@ const pacientesMock = [
 
 export default function Pacientes() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    nome: '',
+    cpf: '',
+    telefone: '',
+    email: '',
+    dataNascimento: '',
+    convenio: '',
+    endereco: '',
+    whatsapp: '',
+  });
 
   const filteredPacientes = pacientesMock.filter(paciente =>
     paciente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     paciente.cpf.includes(searchTerm) ||
     paciente.telefone.includes(searchTerm)
   );
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validação básica
+    if (!formData.nome || !formData.cpf || !formData.telefone) {
+      toast.error('Preencha os campos obrigatórios');
+      return;
+    }
+
+    // Aqui você faria a chamada para a API
+    console.log('Dados do novo paciente:', formData);
+    toast.success('Paciente cadastrado com sucesso!');
+    
+    // Resetar formulário e fechar dialog
+    setFormData({
+      nome: '',
+      cpf: '',
+      telefone: '',
+      email: '',
+      dataNascimento: '',
+      convenio: '',
+      endereco: '',
+      whatsapp: '',
+    });
+    setIsDialogOpen(false);
+  };
 
   return (
     <MainLayout 
@@ -73,7 +126,10 @@ export default function Pacientes() {
                   className="pl-10"
                 />
               </div>
-              <Button className="w-full md:w-auto">
+              <Button 
+                className="w-full md:w-auto"
+                onClick={() => setIsDialogOpen(true)}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Paciente
               </Button>
@@ -185,6 +241,136 @@ export default function Pacientes() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Dialog Novo Paciente */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Novo Paciente</DialogTitle>
+            <DialogDescription>
+              Preencha os dados do novo paciente. Campos com * são obrigatórios.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-2">
+              {/* Nome Completo */}
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="nome">Nome Completo *</Label>
+                <Input
+                  id="nome"
+                  name="nome"
+                  placeholder="Nome completo do paciente"
+                  value={formData.nome}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* CPF */}
+              <div className="space-y-2">
+                <Label htmlFor="cpf">CPF *</Label>
+                <Input
+                  id="cpf"
+                  name="cpf"
+                  placeholder="000.000.000-00"
+                  value={formData.cpf}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* Data de Nascimento */}
+              <div className="space-y-2">
+                <Label htmlFor="dataNascimento">Data de Nascimento</Label>
+                <Input
+                  id="dataNascimento"
+                  name="dataNascimento"
+                  type="date"
+                  value={formData.dataNascimento}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              {/* Telefone */}
+              <div className="space-y-2">
+                <Label htmlFor="telefone">Telefone *</Label>
+                <Input
+                  id="telefone"
+                  name="telefone"
+                  placeholder="(00) 00000-0000"
+                  value={formData.telefone}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* WhatsApp */}
+              <div className="space-y-2">
+                <Label htmlFor="whatsapp">WhatsApp</Label>
+                <Input
+                  id="whatsapp"
+                  name="whatsapp"
+                  placeholder="(00) 00000-0000"
+                  value={formData.whatsapp}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="email@exemplo.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              {/* Convênio */}
+              <div className="space-y-2">
+                <Label htmlFor="convenio">Convênio</Label>
+                <Input
+                  id="convenio"
+                  name="convenio"
+                  placeholder="Ex: Unimed, Particular"
+                  value={formData.convenio}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              {/* Endereço */}
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="endereco">Endereço</Label>
+                <Input
+                  id="endereco"
+                  name="endereco"
+                  placeholder="Rua, número, bairro, cidade"
+                  value={formData.endereco}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsDialogOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit">
+                <Plus className="w-4 h-4 mr-2" />
+                Cadastrar Paciente
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </MainLayout>
   );
 }
