@@ -39,13 +39,14 @@ class User(UserInDB):
 
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    email: str  # Pode ser email ou username
     password: str
 
 
 class Token(BaseModel):
     access_token: str
     token_type: str
+    user: Optional[User] = None
 
 
 class TokenData(BaseModel):

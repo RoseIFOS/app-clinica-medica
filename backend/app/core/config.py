@@ -5,10 +5,10 @@ import os
 
 class Settings(BaseSettings):
     # Database
-    database_url: str = "postgresql://postgres:postgres123@localhost:5432/clinica_medica"
+    database_url: str = "postgresql://postgres:postgres@postgres:5432/clinica_medica"
     
     # Redis
-    redis_url: str = "redis://localhost:6379"
+    redis_url: str = "redis://redis:6379"
     
     # Security
     secret_key: str = "your-secret-key-here-change-in-production"

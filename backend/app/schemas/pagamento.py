@@ -6,6 +6,7 @@ from ..models.pagamento import MetodoPagamento, StatusPagamento
 
 class PagamentoBase(BaseModel):
     paciente_id: int
+    medico_id: Optional[int] = None
     consulta_id: Optional[int] = None
     valor: Decimal
     metodo_pagamento: MetodoPagamento
@@ -13,7 +14,7 @@ class PagamentoBase(BaseModel):
     observacoes: Optional[str] = None
 
 class PagamentoCreate(PagamentoBase):
-    pass
+    status: Optional[StatusPagamento] = StatusPagamento.PENDENTE
 
 class PagamentoUpdate(BaseModel):
     valor: Optional[Decimal] = None
@@ -41,12 +42,15 @@ class PagamentoList(BaseModel):
 
 class PagamentoResumo(BaseModel):
     id: int
+    paciente_id: int
+    medico_id: Optional[int] = None
     valor: Decimal
     status: StatusPagamento
     metodo_pagamento: MetodoPagamento
     data_vencimento: Optional[date] = None
     data_pagamento: Optional[datetime] = None
     paciente_nome: str
+    medico_nome: Optional[str] = None
     consulta_data: Optional[datetime] = None
 
 class PagamentoListResumo(BaseModel):

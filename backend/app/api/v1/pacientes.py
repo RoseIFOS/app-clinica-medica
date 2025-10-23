@@ -18,7 +18,7 @@ def list_pacientes(
     current_user: User = Depends(get_current_user)
 ):
     """Listar pacientes com paginação e busca"""
-    query = db.query(Paciente)
+    query = db.query(Paciente).filter(Paciente.is_active == True)
     
     if search:
         search_term = f"%{search}%"
@@ -65,7 +65,9 @@ def create_paciente(
                 detail="Email já cadastrado"
             )
     
-    db_paciente = Paciente(**paciente.dict())
+    paciente_data = paciente.dict()
+    paciente_data['is_active'] = True
+    db_paciente = Paciente(**paciente_data)
     db.add(db_paciente)
     db.commit()
     db.refresh(db_paciente)
@@ -79,7 +81,10 @@ def get_paciente(
     current_user: User = Depends(get_current_user)
 ):
     """Obter detalhes de um paciente"""
-    paciente = db.query(Paciente).filter(Paciente.id == paciente_id).first()
+    paciente = db.query(Paciente).filter(
+        Paciente.id == paciente_id,
+        Paciente.is_active == True
+    ).first()
     if not paciente:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -96,7 +101,10 @@ def update_paciente(
     current_user: User = Depends(get_current_user)
 ):
     """Atualizar dados de um paciente"""
-    paciente = db.query(Paciente).filter(Paciente.id == paciente_id).first()
+    paciente = db.query(Paciente).filter(
+        Paciente.id == paciente_id,
+        Paciente.is_active == True
+    ).first()
     if not paciente:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -144,7 +152,10 @@ def delete_paciente(
     current_user: User = Depends(get_current_user)
 ):
     """Desativar um paciente (soft delete)"""
-    paciente = db.query(Paciente).filter(Paciente.id == paciente_id).first()
+    paciente = db.query(Paciente).filter(
+        Paciente.id == paciente_id,
+        Paciente.is_active == True
+    ).first()
     if not paciente:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -164,7 +175,10 @@ def get_paciente_historico(
     current_user: User = Depends(get_current_user)
 ):
     """Obter histórico completo do paciente"""
-    paciente = db.query(Paciente).filter(Paciente.id == paciente_id).first()
+    paciente = db.query(Paciente).filter(
+        Paciente.id == paciente_id,
+        Paciente.is_active == True
+    ).first()
     if not paciente:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

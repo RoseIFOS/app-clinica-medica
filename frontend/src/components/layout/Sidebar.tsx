@@ -8,7 +8,8 @@ import {
   MessageCircle, 
   Settings,
   LogOut,
-  Activity
+  Activity,
+  Stethoscope
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -18,6 +19,7 @@ const menuItems = [
   { icon: Users, label: 'Pacientes', path: '/pacientes', roles: ['admin', 'medico', 'recepcionista'] },
   { icon: Calendar, label: 'Agenda', path: '/agenda', roles: ['admin', 'medico', 'recepcionista'] },
   { icon: FileText, label: 'Prontuários', path: '/prontuarios', roles: ['admin', 'medico'] },
+  { icon: Stethoscope, label: 'Médicos', path: '/medicos', roles: ['admin'] },
   { icon: DollarSign, label: 'Financeiro', path: '/financeiro', roles: ['admin', 'recepcionista'] },
   { icon: MessageCircle, label: 'Lembretes', path: '/lembretes', roles: ['admin', 'recepcionista'] },
   { icon: Settings, label: 'Configurações', path: '/configuracoes', roles: ['admin'] },

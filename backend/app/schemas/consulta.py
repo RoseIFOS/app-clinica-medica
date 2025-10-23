@@ -53,6 +53,8 @@ class AgendaMedico(BaseModel):
 
 class ConsultaResumo(BaseModel):
     id: int
+    paciente_id: int
+    medico_id: int
     data_hora: datetime
     paciente_nome: str
     medico_nome: str

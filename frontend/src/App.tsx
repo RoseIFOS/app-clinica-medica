@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Pacientes from "./pages/Pacientes";
 import Agenda from "./pages/Agenda";
 import Prontuarios from "./pages/Prontuarios";
+import Medicos from "./pages/Medicos";
 import Financeiro from "./pages/Financeiro";
 import Lembretes from "./pages/Lembretes";
 import Configuracoes from "./pages/Configuracoes";
@@ -44,6 +45,11 @@ const App = () => (
             <Route path="/prontuarios" element={
               <ProtectedRoute roles={['admin', 'medico']}>
                 <Prontuarios />
+              </ProtectedRoute>
+            } />
+            <Route path="/medicos" element={
+              <ProtectedRoute roles={['admin']}>
+                <Medicos />
               </ProtectedRoute>
             } />
             <Route path="/financeiro" element={

@@ -25,6 +25,7 @@ class Pagamento(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     paciente_id = Column(Integer, ForeignKey("pacientes.id"), nullable=False)
+    medico_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     consulta_id = Column(Integer, ForeignKey("consultas.id"), nullable=True)
     valor = Column(Numeric(10, 2), nullable=False)
     metodo_pagamento = Column(Enum(MetodoPagamento), nullable=False)
@@ -37,4 +38,5 @@ class Pagamento(Base):
 
     # Relacionamentos
     paciente = relationship("Paciente", back_populates="pagamentos")
+    medico = relationship("User", foreign_keys=[medico_id])
     consulta = relationship("Consulta", back_populates="pagamentos")

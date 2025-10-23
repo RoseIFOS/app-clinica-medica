@@ -20,8 +20,8 @@ router = APIRouter()
 def list_consultas(
     skip: int = Query(0, ge=0, description="Número de registros para pular"),
     limit: int = Query(100, ge=1, le=1000, description="Número máximo de registros para retornar"),
-    data_inicio: Optional[date] = Query(None, description="Data de início para filtrar"),
-    data_fim: Optional[date] = Query(None, description="Data de fim para filtrar"),
+    data_inicio: Optional[str] = Query(None, description="Data de início para filtrar (YYYY-MM-DD)"),
+    data_fim: Optional[str] = Query(None, description="Data de fim para filtrar (YYYY-MM-DD)"),
     medico_id: Optional[int] = Query(None, description="ID do médico para filtrar"),
     status: Optional[StatusConsulta] = Query(None, description="Status da consulta"),
     db: Session = Depends(get_db),
@@ -30,12 +30,20 @@ def list_consultas(
     """Listar consultas com filtros e paginação"""
     query = db.query(Consulta)
     
+    print(f"🔍 Filtros recebidos - data_inicio: {data_inicio} (tipo: {type(data_inicio)}), data_fim: {data_fim} (tipo: {type(data_fim)}), medico_id: {medico_id}, status: {status}")
+    
     # Filtros
     if data_inicio:
-        query = query.filter(Consulta.data_hora >= datetime.combine(data_inicio, time.min))
+        data_inicio_obj = datetime.strptime(data_inicio, '%Y-%m-%d').date()
+        inicio_datetime = datetime.combine(data_inicio_obj, time.min)
+        query = query.filter(Consulta.data_hora >= inicio_datetime)
+        print(f"✅ Aplicado filtro data_inicio: {data_inicio} -> {inicio_datetime}")
     
     if data_fim:
-        query = query.filter(Consulta.data_hora <= datetime.combine(data_fim, time.max))
+        data_fim_obj = datetime.strptime(data_fim, '%Y-%m-%d').date()
+        fim_datetime = datetime.combine(data_fim_obj, time.max)
+        query = query.filter(Consulta.data_hora <= fim_datetime)
+        print(f"✅ Aplicado filtro data_fim: {data_fim} -> {fim_datetime}")
     
     if medico_id:
         query = query.filter(Consulta.medico_id == medico_id)
@@ -49,11 +57,16 @@ def list_consultas(
     total = query.count()
     consultas = query.offset(skip).limit(limit).all()
     
+    print(f"📊 Total de consultas encontradas: {total}")
+    print(f"📊 Consultas retornadas: {len(consultas)}")
+    
     # Converter para resumo
     consultas_resumo = []
     for consulta in consultas:
         consultas_resumo.append(ConsultaResumo(
             id=consulta.id,
+            paciente_id=consulta.paciente_id,
+            medico_id=consulta.medico_id,
             data_hora=consulta.data_hora,
             paciente_nome=consulta.paciente.nome,
             medico_nome=consulta.medico.nome,
@@ -95,22 +108,24 @@ def create_consulta(
     data_inicio = consulta.data_hora
     data_fim = data_inicio + timedelta(minutes=consulta.duracao)
     
-    conflito = db.query(Consulta).filter(
+    # Buscar consultas existentes do médico no período
+    consultas_existentes = db.query(Consulta).filter(
         and_(
             Consulta.medico_id == consulta.medico_id,
-            Consulta.status.in_([StatusConsulta.AGENDADA, StatusConsulta.CONFIRMADA]),
-            or_(
-                and_(
-                    Consulta.data_hora <= data_inicio,
-                    func.date_add(Consulta.data_hora, func.interval(Consulta.duracao, 'MINUTE')) > data_inicio
-                ),
-                and_(
-                    Consulta.data_hora < data_fim,
-                    func.date_add(Consulta.data_hora, func.interval(Consulta.duracao, 'MINUTE')) >= data_fim
-                )
-            )
+            Consulta.status.in_([StatusConsulta.AGENDADA, StatusConsulta.CONFIRMADA])
         )
-    ).first()
+    ).all()
+    
+    # Verificar sobreposição de horários
+    conflito = False
+    for consulta_existente in consultas_existentes:
+        inicio_existente = consulta_existente.data_hora
+        fim_existente = inicio_existente + timedelta(minutes=consulta_existente.duracao)
+        
+        # Verificar se há sobreposição
+        if (data_inicio < fim_existente and data_fim > inicio_existente):
+            conflito = True
+            break
     
     if conflito:
         raise HTTPException(

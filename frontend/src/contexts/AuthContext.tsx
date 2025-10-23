@@ -55,24 +55,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       console.log('🔐 Tentando login na API:', email);
       
-      const formData = new URLSearchParams();
-      formData.append('username', email);
-      formData.append('password', password);
-
-      const response = await api.post('/auth/login', formData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+      const response = await api.post('/auth/login', {
+        email: email,
+        password: password
       });
 
       console.log('✅ Login API bem-sucedido:', response.data);
 
       const { access_token, user: userData } = response.data;
+      
+      // Se não receber userData, buscar dados do usuário via API
+      let finalUserData = userData;
+      if (!userData) {
+        console.log('🔍 Buscando dados do usuário via /me');
+        try {
+          const userResponse = await api.get('/auth/me');
+          finalUserData = userResponse.data;
+        } catch (meError) {
+          console.error('❌ Erro ao buscar dados do usuário:', meError);
+          throw new Error('Erro ao obter dados do usuário');
+        }
+      }
 
       localStorage.setItem('token', access_token);
-      localStorage.setItem('user', JSON.stringify(userData));
-      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(finalUserData));
+      setUser(finalUserData);
       setUseApiAuth(true);
+      
+      console.log('👤 Usuário definido:', finalUserData);
+      console.log('🔑 Token salvo:', access_token);
       
       toast.success('Login realizado com sucesso! (API Real)');
       return;

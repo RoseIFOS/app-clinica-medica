@@ -30,11 +30,24 @@ def get_current_user(
     
     try:
         token = credentials.credentials
+        print(f"🔑 Token recebido: {token[:50]}...")
         payload = verify_token(token)
-        user_id: int = payload.get("sub")
-        if user_id is None:
+        print(f"📋 Payload decodificado: {payload}")
+        if payload is None:
+            print("❌ Payload é None")
             raise credentials_exception
-    except JWTError:
+        user_id_str = payload.get("sub")
+        print(f"👤 User ID (string): {user_id_str}")
+        if user_id_str is None:
+            raise credentials_exception
+        
+        try:
+            user_id = int(user_id_str)
+        except (ValueError, TypeError):
+            print(f"❌ Erro ao converter user_id: {user_id_str}")
+            raise credentials_exception
+    except JWTError as e:
+        print(f"❌ JWT Error: {e}")
         raise credentials_exception
     
     user = db.query(User).filter(User.id == user_id).first()

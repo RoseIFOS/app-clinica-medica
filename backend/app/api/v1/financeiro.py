@@ -63,14 +63,23 @@ def list_pagamentos(
             if consulta:
                 consulta_data = consulta.data_hora
         
+        medico_nome = None
+        if pagamento.medico:
+            medico_nome = pagamento.medico.nome
+        else:
+            print(f"⚠️ Pagamento {pagamento.id} não tem médico associado (medico_id: {pagamento.medico_id})")
+        
         pagamentos_resumo.append(PagamentoResumo(
             id=pagamento.id,
+            paciente_id=pagamento.paciente_id,
+            medico_id=pagamento.medico_id,
             valor=pagamento.valor,
             status=pagamento.status,
             metodo_pagamento=pagamento.metodo_pagamento,
             data_vencimento=pagamento.data_vencimento,
             data_pagamento=pagamento.data_pagamento,
             paciente_nome=pagamento.paciente.nome,
+            medico_nome=medico_nome,
             consulta_data=consulta_data
         ))
     
