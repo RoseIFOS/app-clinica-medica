@@ -15,7 +15,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 const menuItems = [
-  { icon: Home, label: 'Dashboard', path: '/', roles: ['admin', 'medico', 'recepcionista'] },
+  { icon: Home, label: 'Dashboard', path: '/dashboard', roles: ['admin', 'medico', 'recepcionista'] },
   { icon: Users, label: 'Pacientes', path: '/pacientes', roles: ['admin', 'medico', 'recepcionista'] },
   { icon: Calendar, label: 'Agenda', path: '/agenda', roles: ['admin', 'medico', 'recepcionista'] },
   { icon: FileText, label: 'Prontuários', path: '/prontuarios', roles: ['admin', 'medico'] },

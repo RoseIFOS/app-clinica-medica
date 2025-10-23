@@ -20,7 +20,7 @@ export default function Login() {
 
     try {
       await login(email, password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       // Error is handled in AuthContext
     } finally {
@@ -28,11 +28,6 @@ export default function Login() {
     }
   };
 
-  const credenciais = [
-    { perfil: 'Admin', email: 'admin@clinica.com', senha: 'admin123' },
-    { perfil: 'Médico', email: 'dr.silva@clinica.com', senha: 'medico123' },
-    { perfil: 'Recepcionista', email: 'recep@clinica.com', senha: 'recepcionista123' },
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-4">
@@ -126,34 +121,6 @@ export default function Login() {
             </CardContent>
           </Card>
 
-          {/* Credenciais de Teste */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Credenciais de Teste</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {credenciais.map((cred) => (
-                  <button
-                    key={cred.email}
-                    onClick={() => {
-                      setEmail(cred.email);
-                      setPassword(cred.senha);
-                    }}
-                    className="w-full text-left p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors"
-                  >
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="font-medium text-sm">{cred.perfil}</p>
-                        <p className="text-xs text-muted-foreground">{cred.email}</p>
-                      </div>
-                      <p className="text-xs text-muted-foreground font-mono">{cred.senha}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
